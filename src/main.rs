@@ -9,7 +9,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let pool = db::create_pool().await?;
 
     // Step 2: Fetch data
-    db::get_users(&pool).await?;
+    let post_data=db::get_users(&pool).await;
+    let data = post_data.unwrap_or("".to_string());
+    println!("data received to main-> {}", data);
 
     Ok(())
 }

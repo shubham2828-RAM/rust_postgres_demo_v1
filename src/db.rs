@@ -16,16 +16,17 @@ pub async fn create_pool() -> Result<PgPool, sqlx::Error> {
     Ok(pool)
 }
 
-pub async fn get_users(pool: &PgPool) -> Result<(), sqlx::Error> {
-    let users = sqlx::query_as::<_, (i32, String)>(
-        "SELECT id, name FROM users"
+pub async fn get_users(pool: &PgPool) -> Result<String, sqlx::Error> {
+    let users = sqlx::query_as::<_, (i32, String,String)>(
+        "SELECT id, name, email FROM users_data"
     )
         .fetch_all(pool)
         .await?;
 
-    for (id, name) in users {
-        println!("ID: {}, Name: {}", id, name);
+    for (id, name,email) in users.to_owned() {
+        println!("ID: {}, Name: {} Email: {}", id, name,email);
     }
 
-    Ok(())
+    let final_string = format!("{:?}", users).to_string();
+    Ok(final_string)
 }
